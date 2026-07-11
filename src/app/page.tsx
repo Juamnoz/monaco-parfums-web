@@ -1,10 +1,11 @@
-import Image from "next/image";
+import Image from "@/components/site-image";
 import Link from "next/link";
 import { products } from "@/data/products";
 import { ProductCard } from "@/components/product-card";
 import { PerfumeSlider } from "@/components/perfume-slider";
 import { TrustBadges } from "@/components/trust-badges";
 import { StorySection } from "@/components/story-section";
+import { assetPath } from "@/lib/base-path";
 
 export default function Home() {
   const arabes = products.filter((p) => p.category === "arabes" && !p.isTester).slice(0, 8);
@@ -15,7 +16,7 @@ export default function Home() {
       {/* Hero */}
       <section className="relative flex min-h-[88vh] items-end overflow-hidden border-b border-border">
         <video
-          src="/video/hero.mp4"
+          src={assetPath("/video/hero.mp4")}
           autoPlay
           muted
           loop

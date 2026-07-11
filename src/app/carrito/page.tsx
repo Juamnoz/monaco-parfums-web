@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/site-image";
 import Link from "next/link";
 import { useCart } from "@/context/cart-context";
 import { formatCOP } from "@/lib/format";

@@ -19,6 +19,7 @@ import {
   cartLinesUpdate,
   type ShopifyCart,
 } from "@/lib/shopify";
+import { pixelAddToCart, pixelInitiateCheckout } from "@/lib/pixel";
 
 export type CartItem = {
   slug: string;
@@ -43,6 +44,7 @@ type CartContextValue = {
   closeCart: () => void;
   checkoutUrl: string | null;
   syncing: boolean;
+  trackCheckoutStart: () => void;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -144,6 +146,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
         ? await cartLinesAdd(cartId, variantId, qty)
         : await cartCreate(variantId, qty);
       applyCart(cart);
+      pixelAddToCart({
+        id: item.slug,
+        name: item.name,
+        price: item.price,
+        quantity: qty,
+      });
     } catch {
       // deja el carrito como estaba si Shopify falla; el usuario puede reintentar
     } finally {
@@ -196,6 +204,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     [items]
   );
 
+  function trackCheckoutStart() {
+    pixelInitiateCheckout({
+      ids: items.map((i) => i.slug),
+      numItems: count,
+      value: total,
+    });
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -211,6 +227,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         closeCart: () => setIsOpen(false),
         checkoutUrl,
         syncing,
+        trackCheckoutStart,
       }}
     >
       {children}

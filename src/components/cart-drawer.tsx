@@ -13,7 +13,7 @@ import { getCrossSell } from "@/lib/cross-sell";
 import { getSizeOptions } from "@/lib/decants";
 
 export function CartDrawer() {
-  const { items, count, total, setQty, removeItem, isOpen, closeCart, checkoutUrl, syncing } = useCart();
+  const { items, count, total, setQty, removeItem, isOpen, closeCart, checkoutUrl, syncing, trackCheckoutStart } = useCart();
   const { open: openQuickView } = useQuickView();
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
@@ -219,6 +219,7 @@ export function CartDrawer() {
             <a
               href={checkoutUrl ?? "#"}
               aria-disabled={!checkoutUrl}
+              onClick={trackCheckoutStart}
               className={`block rounded-full bg-gold px-6 py-3 text-center text-sm font-semibold tracking-wide text-background transition-transform ${
                 checkoutUrl ? "hover:scale-[1.01]" : "pointer-events-none opacity-60"
               }`}

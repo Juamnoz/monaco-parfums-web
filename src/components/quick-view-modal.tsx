@@ -8,6 +8,7 @@ import { useQuickView } from "@/context/quick-view-context";
 import { useCart } from "@/context/cart-context";
 import { getSizeOptions } from "@/lib/decants";
 import { formatCOP } from "@/lib/format";
+import { pixelViewContent } from "@/lib/pixel";
 
 export function QuickViewModal() {
   const { product, close } = useQuickView();
@@ -24,6 +25,12 @@ export function QuickViewModal() {
       setQty(1);
       setSelectedMl(null);
       setAdded(false);
+      pixelViewContent({
+        id: product.slug,
+        name: product.name,
+        price: product.price,
+        brand: product.brand,
+      });
     }
   }, [product]);
 

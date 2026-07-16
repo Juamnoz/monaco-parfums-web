@@ -6,6 +6,7 @@ import { formatCOP } from "@/lib/format";
 import { AddToCart } from "@/components/add-to-cart";
 import { ProductCard } from "@/components/product-card";
 import { getSizeOptions } from "@/lib/decants";
+import { ViewContentTracker } from "@/components/view-content-tracker";
 
 export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
@@ -42,6 +43,12 @@ export default async function ProductPage({
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-12 lg:px-10">
+      <ViewContentTracker
+        slug={product.slug}
+        name={product.name}
+        price={cheapestOption.price}
+        brand={product.brand}
+      />
       <nav className="mb-8 text-sm text-muted">
         <Link href="/" className="hover:text-gold">Inicio</Link>
         <span className="mx-2">/</span>

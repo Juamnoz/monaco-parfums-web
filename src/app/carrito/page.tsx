@@ -7,7 +7,7 @@ import { formatCOP } from "@/lib/format";
 import { whatsappOrderUrl } from "@/lib/whatsapp";
 
 export default function CarritoPage() {
-  const { items, setQty, removeItem, total, clear, checkoutUrl, syncing } = useCart();
+  const { items, setQty, removeItem, total, clear, checkoutUrl, syncing, trackCheckoutStart } = useCart();
 
   if (items.length === 0) {
     return (
@@ -83,6 +83,7 @@ export default function CarritoPage() {
         <a
           href={checkoutUrl ?? "#"}
           aria-disabled={!checkoutUrl}
+          onClick={trackCheckoutStart}
           className={`w-full max-w-xs rounded-full bg-gold px-8 py-3 text-center text-sm font-semibold tracking-wide text-background transition-transform ${
             checkoutUrl ? "hover:scale-[1.02]" : "pointer-events-none opacity-60"
           }`}

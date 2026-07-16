@@ -9,6 +9,7 @@ import { WhatsappFloat } from "@/components/whatsapp-float";
 import { QuickViewModal } from "@/components/quick-view-modal";
 import { CartDrawer } from "@/components/cart-drawer";
 import { MobileNav } from "@/components/mobile-nav";
+import { MetaPixel } from "@/components/meta-pixel";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -39,6 +40,7 @@ export default function RootLayout({
       className={`${playfair.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground pb-24 md:pb-0">
+        <MetaPixel />
         <CartProvider>
           <QuickViewProvider>
             <SiteHeader />

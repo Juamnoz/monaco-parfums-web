@@ -13,7 +13,7 @@ import { getCrossSell } from "@/lib/cross-sell";
 import { getSizeOptions } from "@/lib/decants";
 
 export function CartDrawer() {
-  const { items, count, total, setQty, removeItem, isOpen, closeCart } = useCart();
+  const { items, count, total, setQty, removeItem, isOpen, closeCart, checkoutUrl, syncing } = useCart();
   const { open: openQuickView } = useQuickView();
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
@@ -217,12 +217,21 @@ export function CartDrawer() {
               <span className="font-display text-lg text-gold-soft">{formatCOP(total)}</span>
             </div>
             <a
+              href={checkoutUrl ?? "#"}
+              aria-disabled={!checkoutUrl}
+              className={`block rounded-full bg-gold px-6 py-3 text-center text-sm font-semibold tracking-wide text-background transition-transform ${
+                checkoutUrl ? "hover:scale-[1.01]" : "pointer-events-none opacity-60"
+              }`}
+            >
+              {syncing ? "Actualizando…" : "Finalizar compra"}
+            </a>
+            <a
               href={whatsappOrderUrl(items, total)}
               target="_blank"
               rel="noreferrer"
-              className="block rounded-full bg-gold px-6 py-3 text-center text-sm font-semibold tracking-wide text-background transition-transform hover:scale-[1.01]"
+              className="block text-center text-xs text-muted underline-offset-2 hover:text-gold hover:underline"
             >
-              Finalizar pedido por WhatsApp
+              Prefiero coordinar por WhatsApp
             </a>
             <Link
               href="/carrito"

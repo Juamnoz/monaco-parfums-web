@@ -7,7 +7,7 @@ import { formatCOP } from "@/lib/format";
 import { whatsappOrderUrl } from "@/lib/whatsapp";
 
 export default function CarritoPage() {
-  const { items, setQty, removeItem, total, clear } = useCart();
+  const { items, setQty, removeItem, total, clear, checkoutUrl, syncing } = useCart();
 
   if (items.length === 0) {
     return (
@@ -81,12 +81,22 @@ export default function CarritoPage() {
         </div>
 
         <a
+          href={checkoutUrl ?? "#"}
+          aria-disabled={!checkoutUrl}
+          className={`w-full max-w-xs rounded-full bg-gold px-8 py-3 text-center text-sm font-semibold tracking-wide text-background transition-transform ${
+            checkoutUrl ? "hover:scale-[1.02]" : "pointer-events-none opacity-60"
+          }`}
+        >
+          {syncing ? "Actualizando…" : "Finalizar compra"}
+        </a>
+
+        <a
           href={whatsappOrderUrl(items, total)}
           target="_blank"
           rel="noreferrer"
-          className="w-full max-w-xs rounded-full bg-gold px-8 py-3 text-center text-sm font-semibold tracking-wide text-background transition-transform hover:scale-[1.02]"
+          className="text-xs text-muted underline-offset-2 hover:text-gold hover:underline"
         >
-          Finalizar pedido por WhatsApp
+          Prefiero coordinar por WhatsApp
         </a>
 
         <button onClick={clear} className="text-xs text-muted hover:text-red-400">

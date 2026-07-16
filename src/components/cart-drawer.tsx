@@ -11,6 +11,7 @@ import { formatCOP } from "@/lib/format";
 import { whatsappOrderUrl } from "@/lib/whatsapp";
 import { getCrossSell } from "@/lib/cross-sell";
 import { getSizeOptions } from "@/lib/decants";
+import { FreeShippingBar } from "@/components/free-shipping-bar";
 
 export function CartDrawer() {
   const { items, count, total, setQty, removeItem, isOpen, closeCart, checkoutUrl, syncing, trackCheckoutStart } = useCart();
@@ -83,6 +84,11 @@ export function CartDrawer() {
         </div>
 
         <div className="flex-1 overflow-y-auto">
+          {items.length > 0 && (
+            <div className="border-b border-border">
+              <FreeShippingBar total={total} />
+            </div>
+          )}
           {items.length === 0 ? (
             <div className="px-6 py-10 text-center">
               <p className="text-sm text-muted">Tu carrito está vacío.</p>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCart } from "@/context/cart-context";
 import { formatCOP } from "@/lib/format";
 import { whatsappOrderUrl } from "@/lib/whatsapp";
+import { FreeShippingBar } from "@/components/free-shipping-bar";
 
 export default function CarritoPage() {
   const { items, setQty, removeItem, total, clear, checkoutUrl, syncing, trackCheckoutStart } = useCart();
@@ -26,7 +27,11 @@ export default function CarritoPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-14 lg:px-10">
-      <h1 className="font-display mb-10 text-3xl text-foreground">Tu carrito</h1>
+      <h1 className="font-display mb-6 text-3xl text-foreground">Tu carrito</h1>
+
+      <div className="mb-6 overflow-hidden rounded-2xl border border-border">
+        <FreeShippingBar total={total} />
+      </div>
 
       <ul className="divide-y divide-border border-y border-border">
         {items.map((item) => (

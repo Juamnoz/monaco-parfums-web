@@ -16,6 +16,7 @@ export type SizeOption = {
   label: string;
   price: number;
   isFullBottle: boolean;
+  available: boolean;
 };
 
 export function decantPrice(fullPrice: number, ml: DecantSize): number {
@@ -24,19 +25,24 @@ export function decantPrice(fullPrice: number, ml: DecantSize): number {
   return Math.round(raw / 1000) * 1000;
 }
 
-export function getSizeOptions(fullPrice: number): SizeOption[] {
+// `decantsAllowed` refleja si el producto tiene stock físico para reenvasar
+// en 5/10/15ml (ver src/data/decant-availability.ts). El frasco de 100ml
+// siempre está disponible independientemente de este flag.
+export function getSizeOptions(fullPrice: number, decantsAllowed = true): SizeOption[] {
   return [
     ...DECANT_SIZES.map((ml) => ({
       ml,
       label: `${ml} ml`,
       price: decantPrice(fullPrice, ml),
       isFullBottle: false,
+      available: decantsAllowed,
     })),
     {
       ml: FULL_BOTTLE_ML,
       label: `${FULL_BOTTLE_ML} ml (frasco original)`,
       price: fullPrice,
       isFullBottle: true,
+      available: true,
     },
   ];
 }

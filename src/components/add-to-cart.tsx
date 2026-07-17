@@ -6,13 +6,18 @@ import { useCart } from "@/context/cart-context";
 import type { Product } from "@/data/products";
 import { whatsappProductUrl } from "@/lib/whatsapp";
 import { getSizeOptions } from "@/lib/decants";
+import { decantsAvailable } from "@/data/decant-availability";
 import { formatCOP } from "@/lib/format";
 
 export function AddToCart({ product }: { product: Product }) {
   const { addItem } = useCart();
   const router = useRouter();
-  const sizeOptions = useMemo(() => getSizeOptions(product.price), [product.price]);
-  const [selectedMl, setSelectedMl] = useState(sizeOptions[0].ml);
+  const sizeOptions = useMemo(
+    () => getSizeOptions(product.price, decantsAvailable(product.slug)),
+    [product.price, product.slug]
+  );
+  const firstAvailable = sizeOptions.find((s) => s.available) ?? sizeOptions[0];
+  const [selectedMl, setSelectedMl] = useState(firstAvailable.ml);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
@@ -49,14 +54,18 @@ export function AddToCart({ product }: { product: Product }) {
           {sizeOptions.map((option) => (
             <button
               key={option.ml}
-              onClick={() => setSelectedMl(option.ml)}
+              disabled={!option.available}
+              onClick={() => option.available && setSelectedMl(option.ml)}
               className={`rounded-full border px-4 py-2 text-sm transition-colors ${
-                selectedMl === option.ml
-                  ? "border-gold bg-gold text-background"
-                  : "border-border text-muted hover:border-gold/50 hover:text-gold-soft"
+                !option.available
+                  ? "cursor-not-allowed border-border/50 text-muted/40 line-through"
+                  : selectedMl === option.ml
+                    ? "border-gold bg-gold text-background"
+                    : "border-border text-muted hover:border-gold/50 hover:text-gold-soft"
               }`}
             >
               {option.isFullBottle ? "100 ml" : `${option.ml} ml`}
+              {!option.available && " · agotado"}
             </button>
           ))}
         </div>

@@ -7,6 +7,7 @@ import { createPortal } from "react-dom";
 import { useQuickView } from "@/context/quick-view-context";
 import { useCart } from "@/context/cart-context";
 import { getSizeOptions } from "@/lib/decants";
+import { decantsAvailable } from "@/data/decant-availability";
 import { formatCOP } from "@/lib/format";
 import { pixelViewContent } from "@/lib/pixel";
 
@@ -50,10 +51,13 @@ export function QuickViewModal() {
   }, [product]);
 
   const sizeOptions = useMemo(
-    () => (product ? getSizeOptions(product.price) : []),
+    () => (product ? getSizeOptions(product.price, decantsAvailable(product.slug)) : []),
     [product]
   );
-  const selected = sizeOptions.find((s) => s.ml === selectedMl) ?? sizeOptions[0];
+  const selected =
+    sizeOptions.find((s) => s.ml === selectedMl) ??
+    sizeOptions.find((s) => s.available) ??
+    sizeOptions[0];
 
   if (!mounted) return null;
 
@@ -106,14 +110,18 @@ export function QuickViewModal() {
                   {sizeOptions.map((option) => (
                     <button
                       key={option.ml}
-                      onClick={() => setSelectedMl(option.ml)}
+                      disabled={!option.available}
+                      onClick={() => option.available && setSelectedMl(option.ml)}
                       className={`rounded-full border px-3.5 py-1.5 text-sm transition-colors ${
-                        selected.ml === option.ml
-                          ? "border-gold bg-gold text-background"
-                          : "border-border text-muted hover:border-gold/50 hover:text-gold-soft"
+                        !option.available
+                          ? "cursor-not-allowed border-border/50 text-muted/40 line-through"
+                          : selected.ml === option.ml
+                            ? "border-gold bg-gold text-background"
+                            : "border-border text-muted hover:border-gold/50 hover:text-gold-soft"
                       }`}
                     >
                       {option.isFullBottle ? "100 ml" : `${option.ml} ml`}
+                      {!option.available && " · agotado"}
                     </button>
                   ))}
                 </div>
